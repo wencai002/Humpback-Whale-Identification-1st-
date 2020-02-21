@@ -3,12 +3,15 @@ import os
 
 from timeit import default_timer as timer
 from dataSet import *
+#from dataSet.transform import *
 from models import *
 import torch
 import time
 from utils import *
 from torch.nn.parallel.data_parallel import data_parallel
 
+import os
+os.getcwd()
 
 
 def train_collate(batch):
