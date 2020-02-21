@@ -4,7 +4,7 @@ import os
 from timeit import default_timer as timer
 from dataSet import *
 #from dataSet.transform import *
-from models import *
+from models.model import *
 import torch
 import time
 from utils import *
