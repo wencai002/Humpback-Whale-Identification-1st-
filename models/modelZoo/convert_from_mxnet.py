@@ -102,7 +102,7 @@ def convert_from_mxnet(model, checkpoint_prefix, debug=False):
 
 parser = argparse.ArgumentParser(description='MXNet to PyTorch DPN conversion')
 parser.add_argument('checkpoint_path', metavar='DIR', help='path to mxnet checkpoints')
-parser.add_argument('--model', '-m', metavar='MODEL', default='dpn92',
-                    help='model architecture (default: dpn92)')
+parser.add_argument('--model_pretrain', '-m', metavar='MODEL', default='dpn92',
+                    help='model_pretrain architecture (default: dpn92)')
 
 

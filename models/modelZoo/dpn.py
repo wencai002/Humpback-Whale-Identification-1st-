@@ -106,7 +106,7 @@ def dpn68(num_classes=1000, pretrained=False, test_time_pool=True):
         elif has_mxnet and os.path.exists('./pretrained/'):
             convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn68')
         else:
-            assert False, "Unable to load a pretrained model"
+            assert False, "Unable to load a pretrained model_pretrain"
     return model
 
 
@@ -121,7 +121,7 @@ def dpn68b(num_classes=1000, pretrained=False, test_time_pool=True):
         elif has_mxnet and os.path.exists('./pretrained/'):
             convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn68-extra')
         else:
-            assert False, "Unable to load a pretrained model"
+            assert False, "Unable to load a pretrained model_pretrain"
     return model
 
 
@@ -141,7 +141,7 @@ def dpn92(num_classes=1000, pretrained=False, test_time_pool=True, extra=True):
         elif has_mxnet and os.path.exists('./pretrained/'):
             convert_from_mxnet(model, checkpoint_prefix='./pretrained/' + key)
         else:
-            assert False, "Unable to load a pretrained model"
+            assert False, "Unable to load a pretrained model_pretrain"
     return model
 
 
@@ -156,7 +156,7 @@ def dpn98(num_classes=1000, pretrained=False, test_time_pool=True):
         elif has_mxnet and os.path.exists('./pretrained/'):
             convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn98')
         else:
-            assert False, "Unable to load a pretrained model"
+            assert False, "Unable to load a pretrained model_pretrain"
     return model
 
 
@@ -171,7 +171,7 @@ def dpn131(num_classes=1000, pretrained=False, test_time_pool=True):
         elif has_mxnet and os.path.exists('./pretrained/'):
             convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn131')
         else:
-            assert False, "Unable to load a pretrained model"
+            assert False, "Unable to load a pretrained model_pretrain"
     return model
 
 
@@ -186,7 +186,7 @@ def dpn107(num_classes=1000, pretrained=False, test_time_pool=True):
         elif has_mxnet and os.path.exists('./pretrained/'):
             convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn107-extra')
         else:
-            assert False, "Unable to load a pretrained model"
+            assert False, "Unable to load a pretrained model_pretrain"
     return model
 
 

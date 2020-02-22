@@ -19,7 +19,7 @@ def read_raw_image(p):
     return pil_image.open(p)
 
 ###############################
-### Preprocssing black white
+### Relevant functions
 ###############################
 
 img_shape  = (128,128,1)
@@ -122,6 +122,7 @@ def show_whale(imgs, per_row=5):
 
 ##########################################################################################
 ### Now is the real processing
+### first load the model and data
 ##########################################################################################
 from numpy import loadtxt
 from keras.models import load_model
@@ -129,34 +130,59 @@ from keras.preprocessing.image import array_to_img
 from tqdm import tqdm, tqdm_notebook
 from numpy.linalg import inv as mat_inv
 
-crop_model = load_model("/z_script/cropping.model")
+crop_model = load_model("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping.model")
 
 from pathlib import Path
+train_data_folder = Path ("/home/wencai/PycharmProjects/WhaleIP/train")
 test_data_folder = Path("/home/wencai/PycharmProjects/WhaleIP/test")
-files = list(test_data_folder.glob("*"))
-
-p_names = []
-for file in files:
-    p_name = str(file).split("/")[6]
-    p_names.append(p_name)
 
 import pandas as pd
-df_p_names = pd.DataFrame()
-df_p_names["p_names"]=p_names
-df_p_names["y"]=np.zeros(len(p_names),dtype=int)
-df_p_names["x"]=np.zeros(len(p_names),dtype=int)
-df_p_names.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping.txt",
+df_p_train_names = pd.DataFrame(columns=["id","p_names"])
+folders_train = list(train_data_folder.glob("*"))
+for folder_train in folders_train:
+    folder_train_name = str(folder_train).split("/")[6]
+    if folder_train_name != "-1":
+        files = list(folder_train.glob("*"))
+        for file in files:
+            p_name = str(file).split("/")[7]
+            df_p_train_names = pd.concat([df_p_train_names,
+                                        pd.DataFrame({"id":[folder_train_name],"p_names":[p_name]})])
+df_p_train_names["x"]=int(0)
+df_p_train_names["y"]=int(0)
+df_p_train_names.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping_train.txt",
                   header=None, index=None, sep=",")
 
-with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping.txt', 'rt') as f:
-    data = f.read().split('\n')[:-1]
-data = [line.split(',') for line in data]
-data = [(p,[(int(coord[i]),int(coord[i+1])) for i in range(0,len(coord),2)]) for p,*coord in data]
+p_test_names = []
+files_test = list(test_data_folder.glob("*"))
+for file in files:
+    p_name = str(file).split("/")[6]
+    p_test_names.append(p_name)
 
-data_a = np.zeros((len(data),)+img_shape,dtype=K.floatx())
-for i,(p,_) in enumerate(data):
+df_p_test_names["p_names"]=p_test_names
+df_p_test_names["y"]=np.zeros(len(p_test_names),dtype=int)
+df_p_test_names["x"]=np.zeros(len(p_test_names),dtype=int)
+df_p_test_names.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping_test.txt",
+                  header=None, index=None, sep=",")
+
+with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping_train.txt', 'rt') as f:
+    data_train = f.read().split('\n')[:-1]
+data_train = [line.split(',') for line in data_train]
+data_train = [(id,p,[(int(coord[i]),int(coord[i+1])) for i in range(0,len(coord),2)]) for id,p,*coord in data_train]
+data_a_train = np.zeros((len(data_train),)+img_shape,dtype=K.floatx())
+for i,(id,p,_) in enumerate(data_train):
+    img,trans       = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/test/"+id+"/"+p)
+    data_a_train[i,:,:,:] = img
+
+
+with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping_test.txt', 'rt') as f:
+    data_test = f.read().split('\n')[:-1]
+data_test = [line.split(',') for line in data_test]
+data_test = [(p,[(int(coord[i]),int(coord[i+1])) for i in range(0,len(coord),2)]) for p,*coord in data_test]
+
+data_a_test = np.zeros((len(data_test),)+img_shape,dtype=K.floatx())
+for i,(p,_) in enumerate(data_a_test):
     img,trans       = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/test/"+p)
-    data_a[i,:,:,:] = img
+    data_a_test[i,:,:,:] = img
 
 ###################################################
 ### show some examples
@@ -181,15 +207,17 @@ for i,(p,_) in enumerate(data):
 # submit = [p for _,p,_ in read_csv('../input/whale-categorization-playground/sample_submission.csv').to_records()]
 # join = tagged + submit
 
-p2bb = {}
+p2bb_test = {}
 for p in p_names:
-    if p not in p2bb:
+    if p not in p2bb_test:
         img,trans         = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/test/"+p)
         a                 = np.expand_dims(img, axis=0)
         x0, y0, x1, y1    = crop_model.predict(a).squeeze()
         (u0, v0),(u1, v1) = coord_transform([(x0,y0),(x1,y1)], trans)
-        p2bb[p]           = (u0, v0, u1, v1)
+        p2bb_test[p]      = (u0, v0, u1, v1)
 
 import pickle
 with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/bounding-box.pickle', 'wb') as f:
-    pickle.dump(p2bb, f)
+    pickle.dump(p2bb_test, f)
+
+

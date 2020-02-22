@@ -606,7 +606,7 @@ class NASNetALarge(nn.Module):
 
 
 def nasnetalarge(num_classes=1000, pretrained='imagenet'):
-    r"""NASNetALarge model architecture from the
+    r"""NASNetALarge model_pretrain architecture from the
     `"NASNet" <https://arxiv.org/abs/1707.07012>`_ paper.
     """
     if pretrained:

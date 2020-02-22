@@ -172,7 +172,7 @@ def train(freeze=False, fold_index=1, model_name='seresnext50',min_num_class=10,
         model.freeze()
 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr,  betas=(0.9, 0.99), weight_decay=0.0002)
-    # optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=0.0002)
+    # optimizer = torch.optim.SGD(model_pretrain.parameters(), lr=lr, momentum=0.9, weight_decay=0.0002)
     resultDir = './result/{}_{}'.format(model_name, fold_index)
     ImageDir = resultDir + '/image'
     checkPoint = os.path.join(resultDir, 'checkpoint')

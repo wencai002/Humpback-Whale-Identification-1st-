@@ -9,7 +9,7 @@ sys.stderr = open('/dev/null', 'w')
 import keras
 sys.stderr = old_stderr
 
-### train the model of crapping
+### train the model_pretrain of crapping
 
 from PIL import Image as pil_image
 from PIL.ImageDraw import Draw
@@ -48,7 +48,7 @@ def read_raw_image(p):
 # img
 
 ######################
-### train the model
+### train the model_pretrain
 ######################
 img_shape  = (128,128,1)
 anisotropy = 2.15
@@ -138,5 +138,5 @@ def coord_transform(list, trans):
 
 # tf.image.decode_jpeg()
 #
-# model = MobileNet(input_shape=(224,224,3))
-# embeded_train = model.predict(train_ds)
+# model_pretrain = MobileNet(input_shape=(224,224,3))
+# embeded_train = model_pretrain.predict(train_ds)
