@@ -101,6 +101,16 @@ def coord_transform(list, trans):
         result.append((x,y))
     return result
 
+def bounding_rectangle(list):
+    x0, y0 = list[0]
+    x1, y1 = x0, y0
+    for x,y in list[1:]:
+        x0 = min(x0, x)
+        y0 = min(y0, y)
+        x1 = max(x1, x)
+        y1 = max(y1, y)
+    return x0,y0,x1,y1
+
 import matplotlib.pyplot as plt
 def show_whale(imgs, per_row=5):
     n         = len(imgs)
@@ -110,20 +120,76 @@ def show_whale(imgs, per_row=5):
     for ax in axes.flatten(): ax.axis('off')
     for i,(img,ax) in enumerate(zip(imgs, axes.flatten())): ax.imshow(img.convert('RGB'))
 
+##########################################################################################
+### Now is the real processing
+##########################################################################################
 from numpy import loadtxt
 from keras.models import load_model
 from keras.preprocessing.image import array_to_img
+from tqdm import tqdm, tqdm_notebook
+from numpy.linalg import inv as mat_inv
 
-crop_model = load_model("/home/wencai/PycharmProjects/WhaleIP/cropping.model")
+crop_model = load_model("/z_script/cropping.model")
+
+from pathlib import Path
+test_data_folder = Path("/home/wencai/PycharmProjects/WhaleIP/test")
+files = list(test_data_folder.glob("*"))
+
+p_names = []
+for file in files:
+    p_name = str(file).split("/")[6]
+    p_names.append(p_name)
+
+import pandas as pd
+df_p_names = pd.DataFrame()
+df_p_names["p_names"]=p_names
+df_p_names["y"]=np.zeros(len(p_names),dtype=int)
+df_p_names["x"]=np.zeros(len(p_names),dtype=int)
+df_p_names.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping.txt",
+                  header=None, index=None, sep=",")
+
+with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping.txt', 'rt') as f:
+    data = f.read().split('\n')[:-1]
+data = [line.split(',') for line in data]
+data = [(p,[(int(coord[i]),int(coord[i+1])) for i in range(0,len(coord),2)]) for p,*coord in data]
 
 data_a = np.zeros((len(data),)+img_shape,dtype=K.floatx())
+for i,(p,_) in enumerate(data):
+    img,trans       = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/test/"+p)
+    data_a[i,:,:,:] = img
 
-images = []
-for i,(p,_) in enumerate(data[:25]):
-    a         = data_a[i]
-    rect     = crop_model.predict(a).squeeze()
-    img       = array_to_img(a[0]).convert('RGB')
-    draw      = Draw(img)
-    draw.rectangle(rect, outline='yellow')
-    images.append(img)
-show_whale(images)
+###################################################
+### show some examples
+###################################################
+
+# images = []
+# for i,(p,_) in enumerate(data[:25]):
+#     a         = data_a[i:i+1]
+#     rect      = crop_model.predict(a).squeeze()
+#     img       = array_to_img(a[0]).convert('RGB')
+#     draw      = Draw(img)
+#     draw.rectangle(rect, outline='yellow')
+#     images.append(img)
+# show_whale(images)
+
+#############################################
+### the real transform
+#############################################
+# from pandas import read_csv
+#
+# tagged = [p for _,p,_ in read_csv('../input/whale-categorization-playground/train.csv').to_records()]
+# submit = [p for _,p,_ in read_csv('../input/whale-categorization-playground/sample_submission.csv').to_records()]
+# join = tagged + submit
+
+p2bb = {}
+for p in p_names:
+    if p not in p2bb:
+        img,trans         = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/test/"+p)
+        a                 = np.expand_dims(img, axis=0)
+        x0, y0, x1, y1    = crop_model.predict(a).squeeze()
+        (u0, v0),(u1, v1) = coord_transform([(x0,y0),(x1,y1)], trans)
+        p2bb[p]           = (u0, v0, u1, v1)
+
+import pickle
+with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/bounding-box.pickle', 'wb') as f:
+    pickle.dump(p2bb, f)
