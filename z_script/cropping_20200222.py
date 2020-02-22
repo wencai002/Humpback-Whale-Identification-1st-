@@ -170,7 +170,7 @@ data_train = [line.split(',') for line in data_train]
 data_train = [(id,p,[(int(coord[i]),int(coord[i+1])) for i in range(0,len(coord),2)]) for id,p,*coord in data_train]
 data_a_train = np.zeros((len(data_train),)+img_shape,dtype=K.floatx())
 for i,(id,p,_) in enumerate(data_train):
-    img,trans       = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/test/"+id+"/"+p)
+    img,trans       = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/test/{}/{}".format(id,p))
     data_a_train[i,:,:,:] = img
 
 
