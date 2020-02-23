@@ -21,7 +21,6 @@ def read_raw_image(p):
 ###############################
 ### Relevant functions
 ###############################
-
 img_shape  = (128,128,1)
 anisotropy = 2.15
 
@@ -29,7 +28,6 @@ import random
 import numpy as np
 from scipy.ndimage import affine_transform
 from keras.preprocessing.image import img_to_array
-from keras import backend as K
 
 def read_array(p):
     img = read_raw_image(p).convert('L')
@@ -154,15 +152,19 @@ df_p_train_names.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Ide
 
 p_test_names = []
 files_test = list(test_data_folder.glob("*"))
-for file in files:
+for file in files_test:
     p_name = str(file).split("/")[6]
     p_test_names.append(p_name)
 
+import numpy as np
+df_p_test_names = pd.DataFrame()
 df_p_test_names["p_names"]=p_test_names
 df_p_test_names["y"]=np.zeros(len(p_test_names),dtype=int)
 df_p_test_names["x"]=np.zeros(len(p_test_names),dtype=int)
 df_p_test_names.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping_test.txt",
                   header=None, index=None, sep=",")
+
+from keras import backend as K
 
 with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping_train.txt', 'rt') as f:
     data_train = f.read().split('\n')[:-1]
@@ -170,17 +172,15 @@ data_train = [line.split(',') for line in data_train]
 data_train = [(id,p,[(int(coord[i]),int(coord[i+1])) for i in range(0,len(coord),2)]) for id,p,*coord in data_train]
 data_a_train = np.zeros((len(data_train),)+img_shape,dtype=K.floatx())
 for i,(id,p,_) in enumerate(data_train):
-    img,trans       = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/test/{}/{}".format(id,p))
+    img,trans       = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/train/{}/{}".format(id,p))
     data_a_train[i,:,:,:] = img
-
 
 with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping_test.txt', 'rt') as f:
     data_test = f.read().split('\n')[:-1]
 data_test = [line.split(',') for line in data_test]
 data_test = [(p,[(int(coord[i]),int(coord[i+1])) for i in range(0,len(coord),2)]) for p,*coord in data_test]
-
 data_a_test = np.zeros((len(data_test),)+img_shape,dtype=K.floatx())
-for i,(p,_) in enumerate(data_a_test):
+for i,(p,_) in enumerate(data_test):
     img,trans       = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/test/"+p)
     data_a_test[i,:,:,:] = img
 
@@ -189,35 +189,41 @@ for i,(p,_) in enumerate(data_a_test):
 ###################################################
 
 # images = []
-# for i,(p,_) in enumerate(data[:25]):
-#     a         = data_a[i:i+1]
+# for i,(id,p,_) in enumerate(data_train[:25]):
+#     a         = data_a_train[i:i+1]
 #     rect      = crop_model.predict(a).squeeze()
 #     img       = array_to_img(a[0]).convert('RGB')
 #     draw      = Draw(img)
 #     draw.rectangle(rect, outline='yellow')
 #     images.append(img)
-# show_whale(images)
+# images[0].show()
 
 #############################################
 ### the real transform
 #############################################
-# from pandas import read_csv
-#
-# tagged = [p for _,p,_ in read_csv('../input/whale-categorization-playground/train.csv').to_records()]
-# submit = [p for _,p,_ in read_csv('../input/whale-categorization-playground/sample_submission.csv').to_records()]
-# join = tagged + submit
+p2bb_train = {}
+for id_p,p,_ in data_train:
+    if p not in p2bb_train:
+        img,trans = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/train/{}/{}".format(id_p,p))
+        a         = np.expand_dims(img, axis=0)
+        x0, y0, x1, y1     = crop_model.predict(a).squeeze()
+        (u0, v0), (u1, v1) = coord_transform([(x0,y0),(x1,y1)], trans)
+        p2bb_train[p]      = (id_p,(u0, v0, u1, v1))
 
 p2bb_test = {}
-for p in p_names:
+for p in p_test_names:
     if p not in p2bb_test:
-        img,trans         = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/test/"+p)
+        img,trans         = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/test/{}".format(p))
         a                 = np.expand_dims(img, axis=0)
         x0, y0, x1, y1    = crop_model.predict(a).squeeze()
         (u0, v0),(u1, v1) = coord_transform([(x0,y0),(x1,y1)], trans)
         p2bb_test[p]      = (u0, v0, u1, v1)
 
 import pickle
-with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/bounding-box.pickle', 'wb') as f:
+with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/bounding-box_train.pickle', 'wb') as f:
+    pickle.dump(p2bb_train, f)
+
+with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/bounding-box_test.pickle', 'wb') as f:
     pickle.dump(p2bb_test, f)
 
 
