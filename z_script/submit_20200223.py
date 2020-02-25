@@ -143,7 +143,7 @@ def read_cropped_image(p, augment=False):
     img = img / np.std(img,keepdims=True) + K.epsilon()
     return img
 ############################################################
-### Test some data to see how it works
+### define the read functions
 ############################################################
 
 def read_for_training(p):
@@ -151,3 +151,32 @@ def read_for_training(p):
 
 def read_for_validation(p):
     return read_cropped_image(p,False)
+
+############################################################
+### Generate the submission
+############################################################
+import gzip
+from pathlib import Path
+
+test_data_folder = Path("/home/wencai/PycharmProjects/WhaleIP/test")
+files_test = list(test_data_folder.glob("*"))
+submit = []
+for i in range(len(files_test)):
+    file_test = str(files_test[i]).split("/")[6]
+    submit.append(file_test)
+
+#score = np.random.random_sample(siez=(len(train),len(train)))
+
+# def prepare_submission(threshold, filename):
+#     vtop = 0
+#     vhigh = 0
+#     pos = [0,0,0,0,0,0]
+#     with gzip.open(filename, "wt", newline="\n") as f:
+#         f.write("Image, Id\n")
+#         for i,p in enumerate(submit):
+#             t = []
+#             s = set()
+#             a = score[i,:]
+
+standard_model = load_model("/home/wencai/PycharmProjects/WhaleIP/mpiotte_standard.model")
+print(standard_model.summary())

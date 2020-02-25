@@ -188,15 +188,19 @@ for i,(p,_) in enumerate(data_test):
 ### show some examples
 ###################################################
 
-# images = []
-# for i,(id,p,_) in enumerate(data_train[:25]):
-#     a         = data_a_train[i:i+1]
-#     rect      = crop_model.predict(a).squeeze()
-#     img       = array_to_img(a[0]).convert('RGB')
-#     draw      = Draw(img)
-#     draw.rectangle(rect, outline='yellow')
-#     images.append(img)
-# images[0].show()
+images = []
+for i,(id,p,_) in enumerate(data_train[:25]):
+    a         = data_a_train[i:i+1]
+    rect      = crop_model.predict(a).squeeze()
+    img       = array_to_img(a[0]).convert('RGB')
+    draw      = Draw(img)
+    draw.rectangle(rect, outline='yellow')
+    images.append(img)
+images[10].show()
+images[9].show()
+images[11].show()
+images[12].show()
+
 
 #############################################
 ### the real transform
