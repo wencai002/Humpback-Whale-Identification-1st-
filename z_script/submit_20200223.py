@@ -32,7 +32,7 @@ df_data_test = pd.read_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-
                             header=None)
 df_data_test.rename(columns={0:"p_name",1:"size_x",2:"size_y"},inplace=True)
 for i in range(df_data_test.shape[0]):
-    p_name = df_data_train.loc[i,"p_name"]
+    p_name = df_data_test.loc[i,"p_name"]
     size_p = pil_image.open("/home/wencai/PycharmProjects/WhaleIP/test/{}".format(p_name)).size
     df_data_test.loc[i,"size_x"] = size_p[0]
     df_data_test.loc[i,"size_y"] = size_p[1]
@@ -53,8 +53,7 @@ import numpy as np
 img_shape = (384,384,1)
 anisotropy = 2.15
 crop_margin = 0.05
-
-rotate = set()
+rotate=[]
 
 def read_raw_image(p_name):
     if p_name in df_data_train["p_name"].values:
@@ -155,28 +154,30 @@ def read_for_validation(p):
 ############################################################
 ### Generate the submission
 ############################################################
-import gzip
-from pathlib import Path
 
-test_data_folder = Path("/home/wencai/PycharmProjects/WhaleIP/test")
-files_test = list(test_data_folder.glob("*"))
-submit = []
-for i in range(len(files_test)):
-    file_test = str(files_test[i]).split("/")[6]
-    submit.append(file_test)
 
-#score = np.random.random_sample(siez=(len(train),len(train)))
+# img_a = read_cropped_image("PM-WWA-20070626-114.jpg",False)
+# img_a = np.expand_dims(img_a, axis=0)
+# print(img_a)
+# img_b = read_cropped_image("PM-WWA-20070703-112a.jpg",False)
+# img_b = np.expand_dims(img_b, axis=0)
 
-# def prepare_submission(threshold, filename):
-#     vtop = 0
-#     vhigh = 0
-#     pos = [0,0,0,0,0,0]
-#     with gzip.open(filename, "wt", newline="\n") as f:
-#         f.write("Image, Id\n")
-#         for i,p in enumerate(submit):
-#             t = []
-#             s = set()
-#             a = score[i,:]
+# from keras.models import load_model
+# standard_model = load_model("/home/wencai/PycharmProjects/WhaleIP/mpiotte-standard.model")
+# output_test = standard_model.predict([img_a,img_b])[0][0]
+# print(output_test)
 
-standard_model = load_model("/home/wencai/PycharmProjects/WhaleIP/mpiotte_standard.model")
-print(standard_model.summary())
+
+dict_cropped_img = {}
+ls_img_all = df_data_train["p_name"].tolist() + df_data_test["p_name"].tolist()
+for i in range(len(ls_img_all)):
+    p_name = ls_img_all[i]
+    cropped_img = read_cropped_image(ls_img_all[i],False)
+    cropped_img = np.expand_dims(cropped_img, axis=0)
+    dict_cropped_img[p_name] = cropped_img
+with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropped_img.pickle', 'wb') as f:
+    pickle.dump(dict_cropped_img,f)
+
+# df_result_img_a=pd.DataFrame()
+# for i in range(len(ls_img_all)):
+#
