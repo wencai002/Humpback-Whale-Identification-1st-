@@ -32,55 +32,40 @@ model_embed = bootstrap_model.get_layer("model_1")
 ### build the dictionary from embedding
 ################################################################
 
-dict_embed_test = {}
+dict_embed= {}
 for i in range(len(dict_cropped_img_test)):
     p_name = list(dict_cropped_img_test.keys())[i]
     img_crop = dict_cropped_img_test[p_name]
     img_embed = model_embed.predict([img_crop])
-    dict_embed_test[p_name] = img_embed
-with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/embed_file/dict_embed_test.pickle', 'wb') as f:
-    pickle.dump(dict_embed_test,f)
+    dict_embed[p_name] = img_embed
 print("dict_embed_test is finished")
-
-dict_embed_train0 = {}
-for i in range(len(dict_embed_train0)):
-    p_name = list(dict_embed_train0.keys())[i]
-    img_crop = dict_embed_train0[p_name]
+for i in range(len(dict_cropped_img_train0)):
+    p_name = list(dict_cropped_img_train0.keys())[i]
+    img_crop = dict_cropped_img_train0[p_name]
     img_embed = model_embed.predict([img_crop])
-    dict_embed_train0[p_name] = img_embed
-with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/embed_file/dict_embed_train0.pickle', 'wb') as f:
-    pickle.dump(dict_embed_train0,f)
+    dict_embed[p_name] = img_embed
 print("dict_embed_train0 is finished")
-
-dict_embed_train1 = {}
-for i in range(len(dict_embed_train1)):
-    p_name = list(dict_embed_train1.keys())[i]
-    img_crop = dict_embed_train1[p_name]
+for i in range(len(dict_cropped_img_train1)):
+    p_name = list(dict_cropped_img_train1.keys())[i]
+    img_crop = dict_cropped_img_train1[p_name]
     img_embed = model_embed.predict([img_crop])
-    dict_embed_train1[p_name] = img_embed
-with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/embed_file/dict_embed_train1.pickle', 'wb') as f:
-    pickle.dump(dict_embed_train1,f)
+    dict_embed[p_name] = img_embed
 print("dict_embed_train1 is finished")
-
-dict_embed_train2 = {}
-for i in range(len(dict_embed_train2)):
-    p_name = list(dict_embed_train2.keys())[i]
-    img_crop = dict_embed_train2[p_name]
+for i in range(len(dict_cropped_img_train2)):
+    p_name = list(dict_cropped_img_train2.keys())[i]
+    img_crop = dict_cropped_img_train2[p_name]
     img_embed = model_embed.predict([img_crop])
-    dict_embed_train2[p_name] = img_embed
-with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/embed_file/dict_embed_train2.pickle', 'wb') as f:
-    pickle.dump(dict_embed_train2,f)
+    dict_embed[p_name] = img_embed
 print("dict_embed_train2 is finished")
-
-dict_embed_train3 = {}
-for i in range(len(dict_embed_train3)):
-    p_name = list(dict_embed_train3.keys())[i]
-    img_crop = dict_embed_train3[p_name]
+for i in range(len(dict_cropped_img_train3)):
+    p_name = list(dict_cropped_img_train3.keys())[i]
+    img_crop = dict_cropped_img_train3[p_name]
     img_embed = model_embed.predict([img_crop])
-    dict_embed_train3[p_name] = img_embed
-with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/embed_file/dict_embed_train3.pickle', 'wb') as f:
-    pickle.dump(dict_embed_train3,f)
-print("dict_embed_train3 is finished")
+    dict_embed[p_name] = img_embed
+
+with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/embed_file/dict_embed.pickle', 'wb') as f:
+    pickle.dump(dict_embed,f)
+print("dict_embed is finished")
 
 
 #     score_img_a.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/bootstrap_result/{}.csv".format(img_a_name))
