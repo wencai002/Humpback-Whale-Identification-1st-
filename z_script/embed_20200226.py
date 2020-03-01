@@ -68,7 +68,7 @@ with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1s
 print("dict_embed is finished")
 
 
-#     score_img_a.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/bootstrap_result/{}.csv".format(img_a_name))
+# score_img_a.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/bootstrap_result/{}.csv".format(img_a_name))
 # score_img_a = pd.read_csv("/home/wencai/PycharmProjects/WhaleIP/img_a_score.csv")
 # print(score_img_a.sort_values(by=["score"],ascending=False).head(21))
 # for p_name in range(len(dict_img_all)):
