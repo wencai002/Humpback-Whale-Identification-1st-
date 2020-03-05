@@ -4,7 +4,8 @@ import os
 import torch
 from tqdm import tqdm
 from models import *
-from dataSet import *
+from dataSet.reader import *
+from dataSet.transform import *
 import os
 import shutil
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
@@ -49,10 +50,8 @@ def transform(image, mask):
 
     return images
 
-
-
 def test(checkPoint_start=0, fold_index=1, model_name='senet154'):
-    names_test = os.listdir('./input/test')
+    names_test = os.listdir('input/test')
     batch_size = 16
     dst_test = WhaleTestDataset(names_test, mode='test', transform=transform)
     dataloader_test = DataLoader(dst_test, batch_size=batch_size, num_workers=8, collate_fn=train_collate)

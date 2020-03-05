@@ -8,16 +8,14 @@ for r in range(df_result.shape[0]):
     df_submit.loc[r, "p_name"] = p_name
     df_result_r = df_result.loc[r,:]
     df_result_r = df_result_r[1:]
-    df_result_r = df_result_r[df_result_r[1]>=0.99999]
-    ls_r_21 = df_result_r.sort_values(ascending=False)[0:21]
-    ls_r_21_ind = ls_r_21.index
-    ls_r_8 = []
+    ls_r_21 = df_result_r.sort_values(ascending=False)[0:21].index
+    ls_r = []
     for item in ls_r_21:
         if item != p_name:
-            ls_r_8.append(item)
+            ls_r.append(item)
         else: pass
-    ls_r_0 = ls_r_5_
-        df_submit.loc[r,i] = ls_r_20[i]
+    for i in range(20):
+        df_submit.loc[r,i] = ls_r[i]
 # threshold 0.99999
 
 df_submit.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/submit.csv")
