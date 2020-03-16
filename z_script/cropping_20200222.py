@@ -1,3 +1,5 @@
+### save the boundbox coordinate
+################################################################
 # import sys
 # old_stderr = sys.stderr
 # sys.stderr = open('/dev/null', 'w')
@@ -139,12 +141,12 @@ df_p_train_names = pd.DataFrame(columns=["id","p_names"])
 folders_train = list(train_data_folder.glob("*"))
 for folder_train in folders_train:
     folder_train_name = str(folder_train).split("/")[6]
-    if folder_train_name != "-1":
-        files = list(folder_train.glob("*"))
-        for file in files:
-            p_name = str(file).split("/")[7]
-            df_p_train_names = pd.concat([df_p_train_names,
-                                        pd.DataFrame({"id":[folder_train_name],"p_names":[p_name]})])
+    # if folder_train_name != "-1":
+    files = list(folder_train.glob("*"))
+    for file in files:
+        p_name = str(file).split("/")[7]
+        df_p_train_names = pd.concat([df_p_train_names,
+                                      pd.DataFrame({"id":[folder_train_name],"p_names":[p_name]})])
 df_p_train_names["x"]=int(0)
 df_p_train_names["y"]=int(0)
 df_p_train_names.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping_train.txt",
@@ -165,7 +167,6 @@ df_p_test_names.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Iden
                   header=None, index=None, sep=",")
 
 from keras import backend as K
-
 with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping_train.txt', 'rt') as f:
     data_train = f.read().split('\n')[:-1]
 data_train = [line.split(',') for line in data_train]
@@ -184,22 +185,6 @@ for i,(p,_) in enumerate(data_test):
     img,trans       = read_for_validation("/home/wencai/PycharmProjects/WhaleIP/test/"+p)
     data_a_test[i,:,:,:] = img
 
-###################################################
-### show some examples
-###################################################
-
-images = []
-for i,(id,p,_) in enumerate(data_train[:25]):
-    a         = data_a_train[i:i+1]
-    rect      = crop_model.predict(a).squeeze()
-    img       = array_to_img(a[0]).convert('RGB')
-    draw      = Draw(img)
-    draw.rectangle(rect, outline='yellow')
-    images.append(img)
-images[10].show()
-images[9].show()
-images[11].show()
-images[12].show()
 
 
 #############################################
@@ -229,5 +214,22 @@ with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1s
 
 with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/bounding-box_test.pickle', 'wb') as f:
     pickle.dump(p2bb_test, f)
+
+###################################################
+### show some examples
+###################################################
+
+# images = []
+# for i,(id,p,_) in enumerate(data_train[:25]):
+#     a         = data_a_train[i:i+1]
+#     rect      = crop_model.predict(a).squeeze()
+#     img       = array_to_img(a[0]).convert('RGB')
+#     draw      = Draw(img)
+#     draw.rectangle(rect, outline='yellow')
+#     images.append(img)
+# images[10].show()
+# images[9].show()
+# images[11].show()
+# images[12].show()
 
 
