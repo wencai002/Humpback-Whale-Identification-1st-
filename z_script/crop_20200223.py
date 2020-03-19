@@ -64,7 +64,6 @@ import numpy as np
 img_shape = (384,384,1)
 anisotropy = 2.15
 crop_margin = 0.05
-rotate=[]
 
 def read_raw_image(p_name):
     if p_name in df_data_train["p_name"].values:
@@ -72,7 +71,6 @@ def read_raw_image(p_name):
         img = pil_image.open("/home/wencai/PycharmProjects/WhaleIP/train/{}/{}".format(whale_id,p_name))
     else:
         img = pil_image.open("/home/wencai/PycharmProjects/WhaleIP/test/{}".format(p_name))
-    if p_name in rotate: img = img.rotate(180)
     return img
 
 def build_transform(rotation, shear, height_zoom, width_zoom, height_shift, width_shift):
@@ -104,8 +102,7 @@ def read_cropped_image(p, augment=False):
         size_x = df_data_test.loc[df_data_test["p_name"] == p, "size_x"].values[0]
         size_y = df_data_test.loc[df_data_test["p_name"] == p, "size_y"].values[0]
         x0,y0,x1,y1 = p2bb_test[p]
-    if p in rotate:
-        x0, y0, x1, y1 = size_x-x1, size_y-y1, size_x-x0, size_y-y0
+
     dx = x1-x0
     dy = y1-y0
     x0 = x0-dx*crop_margin
@@ -164,21 +161,6 @@ def read_for_training(p):
 def read_for_validation(p):
     return read_cropped_image(p,False)
 
-############################################################
-### Generate the submission
-############################################################
-
-
-# img_a = read_cropped_image("PM-WWA-20070626-114.jpg",False)
-# img_a = np.expand_dims(img_a, axis=0)
-# print(img_a)
-# img_b = read_cropped_image("PM-WWA-20070703-112a.jpg",False)
-# img_b = np.expand_dims(img_b, axis=0)
-
-# from keras.models import load_model
-# standard_model = load_model("/home/wencai/PycharmProjects/WhaleIP/mpiotte-standard.model")
-# output_test = standard_model.predict([img_a,img_b])[0][0]
-# print(output_test)
 
 
 dict_cropped_img = {}

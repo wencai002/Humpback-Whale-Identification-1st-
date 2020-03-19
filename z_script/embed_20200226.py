@@ -2,23 +2,23 @@
 ### import the input image data
 #########################################
 import pickle
-with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropped_img_test.pickle', 'rb') as f:
+with open('/home/wencai/PycharmProjects/WhaleIP/Keras_Martin/cropped/cropped_img_test.pickle', 'rb') as f:
     dict_cropped_img_test = pickle.load(f)
 print(len(dict_cropped_img_test))
 
-with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropped_img_training0.pickle', 'rb') as f:
+with open('/home/wencai/PycharmProjects/WhaleIP/Keras_Martin/cropped/cropped_img_training0.pickle', 'rb') as f:
     dict_cropped_img_train0 = pickle.load(f)
 print(len(dict_cropped_img_train0))
 
-with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropped_img_training1.pickle', 'rb') as f:
+with open('/home/wencai/PycharmProjects/WhaleIP/Keras_Martin/cropped/cropped_img_training1.pickle', 'rb') as f:
     dict_cropped_img_train1 = pickle.load(f)
 print(len(dict_cropped_img_train1))
 
-with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropped_img_training2.pickle', 'rb') as f:
+with open('/home/wencai/PycharmProjects/WhaleIP/Keras_Martin/cropped/cropped_img_training2.pickle', 'rb') as f:
     dict_cropped_img_train2 = pickle.load(f)
 print(len(dict_cropped_img_train2))
 
-with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropped_img_training3.pickle', 'rb') as f:
+with open('/home/wencai/PycharmProjects/WhaleIP/Keras_Martin/cropped/cropped_img_training3.pickle', 'rb') as f:
     dict_cropped_img_train3 = pickle.load(f)
 print(len(dict_cropped_img_train3))
 
