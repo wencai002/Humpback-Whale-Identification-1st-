@@ -141,12 +141,12 @@ df_p_train_names = pd.DataFrame(columns=["id","p_names"])
 folders_train = list(train_data_folder.glob("*"))
 for folder_train in folders_train:
     folder_train_name = str(folder_train).split("/")[6]
-    # if folder_train_name != "-1":
-    files = list(folder_train.glob("*"))
-    for file in files:
-        p_name = str(file).split("/")[7]
-        df_p_train_names = pd.concat([df_p_train_names,
-                                      pd.DataFrame({"id":[folder_train_name],"p_names":[p_name]})])
+    if folder_train_name != "-1":
+        files = list(folder_train.glob("*"))
+        for file in files:
+            p_name = str(file).split("/")[7]
+            df_p_train_names = pd.concat([df_p_train_names,
+                                        pd.DataFrame({"id":[folder_train_name],"p_names":[p_name]})])
 df_p_train_names["x"]=int(0)
 df_p_train_names["y"]=int(0)
 df_p_train_names.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping_train.txt",

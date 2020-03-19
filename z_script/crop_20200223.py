@@ -10,23 +10,18 @@ with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1s
 with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/bounding-box_test.pickle', 'rb') as f:
     p2bb_test = pickle.load(f)
 
-ls = df_bb_test_raw.iloc[:,2]
-ls_1 = [item[1:-1].split(",")[0] for item in ls]
-ls_2 = [item[1:-1].split(",")[1] for item in ls]
-ls_3 = [item[1:-1].split(",")[2] for item in ls]
-ls_4 = [item[1:-1].split(",")[3] for item in ls]
-df_bb_test = pd.DataFrame()
-df_bb_test["img"]=df_bb_test_raw.iloc[:,0]
-df_bb_test["x0"]=ls_1
-df_bb_test["y0"]=ls_2
-df_bb_test["x1"]=ls_3
-df_bb_test["y1"]=ls_4
+# ls = df_bb_test_raw.iloc[:,2]
+# ls_1 = [item[1:-1].split(",")[0] for item in ls]
+# ls_2 = [item[1:-1].split(",")[1] for item in ls]
+# ls_3 = [item[1:-1].split(",")[2] for item in ls]
+# ls_4 = [item[1:-1].split(",")[3] for item in ls]
+# df_bb_test = pd.DataFrame()
+# df_bb_test["img"]=df_bb_test_raw.iloc[:,0]
+# df_bb_test["x0"]=ls_1
+# df_bb_test["y0"]=ls_2
+# df_bb_test["x1"]=ls_3
+# df_bb_test["y1"]=ls_4
 
-
-
-
-print(list(p2bb_train.items())[:5])
-print(list(p2bb_test.items())[:5])
 #######################################################
 ### preprocessing
 ### loading the dataframe result file
@@ -201,9 +196,8 @@ ls_img_train = df_data_train["p_name"].tolist()
 ls_img_train_1000 = ls_img_train[:1000]
 ls_img_train_2000 = ls_img_train[1000:2000]
 ls_img_train_3000 = ls_img_train[2000:3000]
-ls_img_train_4000 = ls_img_train[3000:4000]
-ls_img_train_5000 = ls_img_train[4000:]
-ls_img_train_all = [ls_img_train_1000,ls_img_train_2000,ls_img_train_3000,ls_img_train_4000,ls_img_train_5000]
+ls_img_train_4000 = ls_img_train[3000:]
+ls_img_train_all = [ls_img_train_1000,ls_img_train_2000,ls_img_train_3000,ls_img_train_4000]
 
 for j in range(len(ls_img_train_all)):
     ls = ls_img_train_all[j]
