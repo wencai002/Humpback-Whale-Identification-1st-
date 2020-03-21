@@ -171,8 +171,8 @@ for i in range(len(ls_img_test)):
     cropped_img = np.expand_dims(cropped_img, axis=0)
     dict_cropped_img[p_name] = cropped_img
 print("test dictionary is finished")
-with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropped_img_test.pickle', 'wb') as f:
-    pickle.dump(dict_cropped_img,f)
+# with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropped_img_test.pickle', 'wb') as f:
+#     pickle.dump(dict_cropped_img,f)
 
 ls_img_train = df_data_train["p_name"].tolist()
 ls_img_train_1000 = ls_img_train[:1000]
@@ -189,9 +189,9 @@ for j in range(len(ls_img_train_all)):
         cropped_img = read_cropped_image(ls[i], False)
         cropped_img = np.expand_dims(cropped_img, axis=0)
         dict_cropped_img_train[p_name] = cropped_img
-    with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropped_img_training{}.pickle'.format(j),
-              'wb') as f:
-        pickle.dump(dict_cropped_img_train, f)
+    # with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropped_img_training{}.pickle'.format(j),
+    #           'wb') as f:
+    #     pickle.dump(dict_cropped_img_train, f)
     print("train dictionary {} is finished".format(j))
 
 # df_result_img_a=pd.DataFrame()
