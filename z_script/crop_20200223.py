@@ -9,22 +9,47 @@ with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1s
     p2bb_train = pickle.load(f)
 with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/bounding-box_test.pickle', 'rb') as f:
     p2bb_test = pickle.load(f)
+del f
 
-# ls = df_bb_test_raw.iloc[:,2]
-# ls_1 = [item[1:-1].split(",")[0] for item in ls]
-# ls_2 = [item[1:-1].split(",")[1] for item in ls]
-# ls_3 = [item[1:-1].split(",")[2] for item in ls]
-# ls_4 = [item[1:-1].split(",")[3] for item in ls]
-# df_bb_test = pd.DataFrame()
-# df_bb_test["img"]=df_bb_test_raw.iloc[:,0]
-# df_bb_test["x0"]=ls_1
-# df_bb_test["y0"]=ls_2
-# df_bb_test["x1"]=ls_3
-# df_bb_test["y1"]=ls_4
+######################################################################################################
+### create the bounding box csv
+######################################################################################################
+
+import pandas as pd
+from PIL import Image as pil_image
+# fill out the size of all pictures
+df_bb_train = pd.DataFrame()
+for i in range(len(p2bb_train.keys())):
+    img_name = list(p2bb_train.keys())[i]
+    whale_id = p2bb_train[img_name][0]
+    size_p = pil_image.open("/home/wencai/PycharmProjects/WhaleIP/train/{}/{}".format(whale_id, img_name)).size
+    df_bb_train.loc[i,"img"]=img_name
+    df_bb_train.loc[i,"x0"]=p2bb_train[img_name][1][0]
+    df_bb_train.loc[i,"y0"]=p2bb_train[img_name][1][1]
+    df_bb_train.loc[i,"x1"]=p2bb_train[img_name][1][2]
+    df_bb_train.loc[i,"y1"]=p2bb_train[img_name][1][3]
+    df_bb_train.loc[i,"size_x"]=size_p[0]
+    df_bb_train.loc[i,"size_y"]=size_p[1]
+df_bb_train.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/df_bb_train.csv", index=False)
+
+df_bb_test = pd.DataFrame()
+for i in range(len(p2bb_test.keys())):
+    img_name = list(p2bb_test.keys())[i]
+    size_p = pil_image.open("/home/wencai/PycharmProjects/WhaleIP/test/{}".format(img_name)).size
+    df_bb_test.loc[i,"img"]=img_name
+    df_bb_test.loc[i,"x0"]=p2bb_test[img_name][0]
+    df_bb_test.loc[i,"y0"]=p2bb_test[img_name][1]
+    df_bb_test.loc[i,"x1"]=p2bb_test[img_name][2]
+    df_bb_test.loc[i,"y1"]=p2bb_test[img_name][3]
+    df_bb_test.loc[i,"size_x"]=size_p[0]
+    df_bb_test.loc[i,"size_y"]=size_p[1]
+df_bb_test.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/df_bb_test.csv", index=False)
+
 
 #######################################################
 ### preprocessing
 ### loading the dataframe result file
+### and create the bounding box csv
 #######################################################
 import pandas as pd
 df_data_train = pd.read_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping_train.txt",

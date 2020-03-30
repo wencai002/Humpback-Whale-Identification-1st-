@@ -166,7 +166,7 @@ df_p_test_names["x"]=np.zeros(len(p_test_names),dtype=int)
 df_p_test_names.to_csv("/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping_test.txt",
                   header=None, index=None, sep=",")
 
-from keras import backend as K
+from tensorflow.keras import backend as K
 with open('/home/wencai/PycharmProjects/WhaleIP/Humpback-Whale-Identification-1st-/z_script/cropping_train.txt', 'rt') as f:
     data_train = f.read().split('\n')[:-1]
 data_train = [line.split(',') for line in data_train]
